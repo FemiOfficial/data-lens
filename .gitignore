@@ -1,0 +1,13 @@
+node_modules/
+build/
+dist/
+.vscode-test/
+vscode/dist/
+vscode/media/ui.*
+standalone/ui.*
+jetbrains/build/
+jetbrains/.gradle/
+jetbrains/.intellijPlatform/
+jetbrains/src/main/resources/webview/
+.DS_Store
+*.log

@@ -1,0 +1,206 @@
+{
+  "name": "data-lens",
+  "displayName": "Data Lens — CSV, Excel & JSON Explorer",
+  "description": "Interactive spreadsheet editor for CSV/TSV/XLSX and a tree + graph + table explorer for JSON. Sort, filter, profile, chart, transform and export — right inside your editor.",
+  "version": "0.1.0",
+  "publisher": "data-lens",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Data Science",
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "csv",
+    "tsv",
+    "excel",
+    "xlsx",
+    "json",
+    "jsonl",
+    "spreadsheet",
+    "table",
+    "chart",
+    "viewer",
+    "editor"
+  ],
+  "main": "./dist/extension.js",
+  "browser": "./dist/extension.js",
+  "activationEvents": [
+    "onCustomEditor:dataLens.table",
+    "onCustomEditor:dataLens.workbook",
+    "onCustomEditor:dataLens.json"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": true
+  },
+  "contributes": {
+    "customEditors": [
+      {
+        "viewType": "dataLens.table",
+        "displayName": "Data Lens Table",
+        "selector": [
+          {
+            "filenamePattern": "*.csv"
+          },
+          {
+            "filenamePattern": "*.tsv"
+          },
+          {
+            "filenamePattern": "*.tab"
+          }
+        ],
+        "priority": "default"
+      },
+      {
+        "viewType": "dataLens.workbook",
+        "displayName": "Data Lens Workbook",
+        "selector": [
+          {
+            "filenamePattern": "*.xlsx"
+          },
+          {
+            "filenamePattern": "*.xlsm"
+          },
+          {
+            "filenamePattern": "*.xls"
+          },
+          {
+            "filenamePattern": "*.ods"
+          }
+        ],
+        "priority": "default"
+      },
+      {
+        "viewType": "dataLens.json",
+        "displayName": "Data Lens JSON Explorer",
+        "selector": [
+          {
+            "filenamePattern": "*.json"
+          },
+          {
+            "filenamePattern": "*.jsonc"
+          },
+          {
+            "filenamePattern": "*.geojson"
+          },
+          {
+            "filenamePattern": "*.jsonl"
+          },
+          {
+            "filenamePattern": "*.ndjson"
+          },
+          {
+            "filenamePattern": "*.har"
+          }
+        ],
+        "priority": "option"
+      }
+    ],
+    "commands": [
+      {
+        "command": "dataLens.open",
+        "title": "Open in Data Lens",
+        "category": "Data Lens",
+        "icon": "$(table)"
+      },
+      {
+        "command": "dataLens.openJson",
+        "title": "Visualize JSON",
+        "category": "Data Lens",
+        "icon": "$(type-hierarchy)"
+      },
+      {
+        "command": "dataLens.openAsText",
+        "title": "Open as Text",
+        "category": "Data Lens",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "dataLens.newFromClipboard",
+        "title": "New Table from Clipboard",
+        "category": "Data Lens"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "dataLens.openJson",
+          "when": "resourceExtname =~ /^\\.(json|jsonc|geojson|jsonl|ndjson|har)$/ && activeEditor == workbench.editors.files.textFileEditor",
+          "group": "navigation"
+        },
+        {
+          "command": "dataLens.open",
+          "when": "resourceExtname =~ /^\\.(csv|tsv|tab)$/ && activeEditor == workbench.editors.files.textFileEditor",
+          "group": "navigation"
+        },
+        {
+          "command": "dataLens.openAsText",
+          "when": "activeCustomEditorId =~ /^dataLens\\.(table|json)$/",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "dataLens.open",
+          "when": "resourceExtname =~ /^\\.(csv|tsv|tab|xlsx|xlsm|xls|ods|json|jsonc|geojson|jsonl|ndjson|har)$/",
+          "group": "navigation@9"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "dataLens.open",
+          "when": "resourceExtname =~ /^\\.(csv|tsv|tab|json|jsonc|geojson|jsonl|ndjson|har)$/"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "dataLens.openAsText",
+          "when": "activeCustomEditorId =~ /^dataLens\\./"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Data Lens",
+      "properties": {
+        "dataLens.csv.firstRowIsHeader": {
+          "type": "boolean",
+          "default": true,
+          "description": "Treat the first row of CSV/TSV/XLSX files as column headers."
+        },
+        "dataLens.json.indent": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "default": "auto",
+          "enum": [
+            "auto",
+            2,
+            4,
+            "\t"
+          ],
+          "description": "Indentation used when saving edited JSON. 'auto' keeps the file's existing indentation."
+        },
+        "dataLens.maxFileSizeMB": {
+          "type": "number",
+          "default": 200,
+          "description": "Files larger than this open in the text editor instead."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "cd .. && node scripts/build.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://example.com/data-lens.git"
+  }
+}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Lens</title>
+  <link rel="stylesheet" href="ui.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="launcher">
+      <label class="drop" id="drop">
+        <h1>Data Lens</h1>
+        <p>Drop a CSV, TSV, XLSX, JSON or JSONL file here, or choose one.</p>
+        <input type="file" id="file" accept=".csv,.tsv,.tab,.xlsx,.xlsm,.xls,.ods,.json,.jsonl,.ndjson,.geojson" hidden />
+        <span class="btn primary">Choose file…</span>
+        <p class="small" id="samples"></p>
+      </label>
+    </div>
+  </div>
+  <script src="ui.js"></script>
+  <script>
+    const openFile = async (f) => window.dataLens.open(f.name, new Uint8Array(await f.arrayBuffer()));
+    const drop = document.getElementById('drop');
+    document.getElementById('file').addEventListener('change', (e) => e.target.files[0] && openFile(e.target.files[0]));
+    ['dragover', 'dragenter'].forEach((t) => drop.addEventListener(t, (e) => (e.preventDefault(), drop.classList.add('over'))));
+    drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+    drop.addEventListener('drop', (e) => (e.preventDefault(), e.dataTransfer.files[0] && openFile(e.dataTransfer.files[0])));
+    // ?file=samples/sales.csv loads a file served next to this page (dev convenience)
+    const q = new URLSearchParams(location.search).get('file');
+    const samples = ['sales.csv', 'inventory.xlsx', 'users.json', 'events.jsonl'];
+    document.getElementById('samples').innerHTML = 'Samples: ' + samples.map((s) => `<a href="?file=samples/${s}">${s}</a>`).join(' · ');
+    if (q) fetch(q).then((r) => r.arrayBuffer()).then((b) => window.dataLens.open(q.split('/').pop(), new Uint8Array(b)));
+  </script>
+</body>
+</html>

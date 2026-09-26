@@ -1,0 +1,27 @@
+<idea-plugin>
+    <id>dev.datalens.data-lens</id>
+    <name>Data Lens: CSV, Excel &amp; JSON Explorer</name>
+    <vendor>Data Lens</vendor>
+    <description><![CDATA[
+      <p>Interactive data workbench for CSV, TSV, Excel (XLSX/XLS/ODS) and JSON / JSON Lines files.</p>
+      <ul>
+        <li>Fast virtualized grid: sort, multi-column filters, search, inline editing, copy/paste ranges</li>
+        <li>Column profiling with histograms, charts (bar, line, area, scatter, donut, histogram)</li>
+        <li>Transforms: computed columns (formula language), find &amp; replace, dedupe, split, group-by / pivot</li>
+        <li>JSON tree, interactive graph and table views, JSONPath queries, TypeScript type generation</li>
+        <li>Export to CSV, TSV, XLSX, JSON, JSON Lines, SQL, HTML and Markdown</li>
+      </ul>
+      <p>Open a CSV or spreadsheet to see the <b>Data Lens</b> tab; for JSON, switch to the Data Lens tab at the bottom of the editor.</p>
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="Data Lens Spreadsheet" implementationClass="dev.datalens.SpreadsheetFileType"
+                  fieldName="INSTANCE" extensions="xlsx;xlsm;xls;ods"/>
+        <fileEditorProvider implementation="dev.datalens.DataLensTableEditorProvider"/>
+        <fileEditorProvider implementation="dev.datalens.DataLensSpreadsheetEditorProvider"/>
+        <fileEditorProvider implementation="dev.datalens.DataLensJsonEditorProvider"/>
+        <notificationGroup id="Data Lens" displayType="BALLOON"/>
+    </extensions>
+</idea-plugin>
