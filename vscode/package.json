@@ -3,7 +3,7 @@
   "displayName": "Data Lens — CSV, Excel & JSON Explorer",
   "description": "Interactive spreadsheet editor for CSV/TSV/XLSX and a tree + graph + table explorer for JSON. Sort, filter, profile, chart, transform and export — right inside your editor.",
   "version": "0.1.0",
-  "publisher": "data-lens",
+  "publisher": "femiofficial",
   "license": "MIT",
   "icon": "media/icon.png",
   "engines": {
@@ -202,5 +202,13 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/FemiOfficial/data-lens.git"
+  },
+  "homepage": "https://github.com/FemiOfficial/data-lens#readme",
+  "bugs": {
+    "url": "https://github.com/FemiOfficial/data-lens/issues"
+  },
+  "galleryBanner": {
+    "color": "#1a1a19",
+    "theme": "dark"
   }
 }

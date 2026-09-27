@@ -7,11 +7,12 @@
     "build": "node scripts/build.mjs",
     "watch": "node scripts/build.mjs --watch",
     "typecheck": "tsc -p ui --noEmit && tsc -p vscode --noEmit",
-    "package:vscode": "npm run build && cd vscode && npx vsce package --no-dependencies --allow-missing-repository -o ../dist/data-lens.vsix",
+    "package:vscode": "npm run build && node -e \"require('fs').mkdirSync('dist',{recursive:true})\" && cd vscode && vsce package --no-dependencies -o ../dist/data-lens.vsix",
     "serve": "npx --yes http-server standalone -p 5178 -c-1",
     "test": "esbuild tests/core.test.ts --bundle --platform=node --format=esm --outfile=build/tests.mjs --log-level=warning && node build/tests.mjs",
     "test:vscode": "npm run build && node tests/integration/run.cjs",
-    "samples": "node scripts/make-samples.mjs"
+    "samples": "node scripts/make-samples.mjs",
+    "publish:openvsx": "ovsx publish dist/data-lens.vsix"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
@@ -19,7 +20,8 @@
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.9.2",
     "chart.js": "^4.4.3",
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.28.2",
+    "ovsx": "^1.2.0",
     "typescript": "^5.5.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }

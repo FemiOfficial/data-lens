@@ -41,11 +41,15 @@ npm run serve            # standalone page at http://localhost:5178/?file=sample
 
 ## Install
 
-- **VS Code:** Extensions view → `…` → *Install from VSIX…* → `dist/data-lens.vsix`, or `code --install-extension dist/data-lens.vsix`
-- **Cursor:** `cursor --install-extension dist/data-lens.vsix` (or drag the .vsix into the Extensions view)
-- **Windsurf / VSCodium:** `windsurf --install-extension …` / `codium --install-extension …`
-- **JetBrains:** Settings → Plugins → ⚙ → *Install Plugin from Disk…* → the plugin .zip
-- Publishing: VS Code Marketplace (`vsce publish`), Open VSX for Cursor / VSCodium / Windsurf (`npx ovsx publish dist/data-lens.vsix`), JetBrains Marketplace (`./gradlew publishPlugin`).
+- **Cursor / Windsurf / VSCodium:** search **"Data Lens"** in the Extensions view (published on [Open VSX](https://open-vsx.org/extension/femiofficial/data-lens) as `femiofficial.data-lens`), or `cursor --install-extension femiofficial.data-lens`
+- **VS Code:** Extensions view → `…` → *Install from VSIX…* with the `.vsix` from the [latest release](https://github.com/FemiOfficial/data-lens/releases/latest)
+- **JetBrains:** Settings → Plugins → ⚙ → *Install Plugin from Disk…* with the plugin `.zip` from the [latest release](https://github.com/FemiOfficial/data-lens/releases/latest)
+
+## Releasing
+
+1. Bump `version` in `vscode/package.json`, commit.
+2. `git tag v<version> && git push --tags`
+3. The **Release** workflow builds both packages, attaches them to a GitHub release and publishes to Open VSX (needs the `OVSX_PAT` repository secret) and the VS Code Marketplace (optional `VSCE_PAT` secret).
 
 ## Using it
 

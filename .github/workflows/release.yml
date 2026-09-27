@@ -1,0 +1,62 @@
+name: Release
+
+# Push a tag like v0.1.0 (matching vscode/package.json "version") to:
+#  1. build the VS Code extension (.vsix) and the JetBrains plugin (.zip)
+#  2. attach both to a GitHub release
+#  3. publish to Open VSX (Cursor, Windsurf, VSCodium…) when the OVSX_PAT secret is set
+#  4. publish to the VS Code Marketplace when the VSCE_PAT secret is set
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Check tag matches extension version
+        run: |
+          v=$(node -p "require('./vscode/package.json').version")
+          [ "v$v" = "$GITHUB_REF_NAME" ] || { echo "Tag $GITHUB_REF_NAME does not match vscode/package.json version $v"; exit 1; }
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run package:vscode
+
+      - name: Build JetBrains plugin
+        working-directory: jetbrains
+        run: ./gradlew buildPlugin --no-daemon --console=plain
+      - run: cp jetbrains/build/distributions/*.zip dist/
+
+      - name: GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/data-lens.vsix dist/data-lens-jetbrains-*.zip --title "Data Lens $GITHUB_REF_NAME" --generate-notes
+
+      - name: Publish to Open VSX
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        if: env.OVSX_PAT != ''
+        run: |
+          ns=$(node -p "require('./vscode/package.json').publisher")
+          npx ovsx create-namespace "$ns" -p "$OVSX_PAT" || echo "namespace $ns already exists"
+          npx ovsx publish dist/data-lens.vsix -p "$OVSX_PAT"
+
+      - name: Publish to VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        if: env.VSCE_PAT != ''
+        run: cd vscode && npx vsce publish --packagePath ../dist/data-lens.vsix -p "$VSCE_PAT"
